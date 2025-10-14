@@ -82,6 +82,7 @@ export function ChatKitPanel({
           onThemeRequest(requested);
         }
       }
+      return {}; // Return empty object as required by the type
     },
     onWidgetAction: async (action: { type: string; factId: string; factText: string }) => {
       if (action.type === "save") {

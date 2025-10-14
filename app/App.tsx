@@ -2,7 +2,6 @@
 
 import { useCallback } from "react";
 import { ChatKitPanel, type FactAction } from "@/components/ChatKitPanelSimple";
-import { SimpleChatKit } from "@/components/SimpleChatKit";
 import { useColorScheme } from "@/hooks/useColorScheme";
 
 export default function App() {
