@@ -80,18 +80,26 @@ export function ChatKitPanel({
         const requested = invocation.params.theme;
         if (typeof requested === "string" && (requested === "light" || requested === "dark")) {
           onThemeRequest(requested);
+          return { success: true };
         }
+        return { success: false };
       }
-      return {}; // Return empty object as required by the type
-    },
-    onWidgetAction: async (action: { type: string; factId: string; factText: string }) => {
-      if (action.type === "save") {
-        onWidgetAction({
-          type: "save",
-          factId: action.factId,
-          factText: action.factText,
-        });
+
+      if (invocation.name === "record_fact") {
+        const id = String(invocation.params.fact_id ?? "");
+        const text = String(invocation.params.fact_text ?? "");
+        if (id && text) {
+          onWidgetAction({
+            type: "save",
+            factId: id,
+            factText: text,
+          });
+          return { success: true };
+        }
+        return { success: false };
       }
+
+      return { success: false };
     },
     onResponseEnd,
   });
