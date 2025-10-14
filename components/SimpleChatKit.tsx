@@ -1,6 +1,6 @@
 "use client";
 
-import { useChatKit } from "@openai/chatkit-react";
+import { ChatKit, useChatKit } from "@openai/chatkit-react";
 import { WORKFLOW_ID } from "@/lib/config";
 
 export function SimpleChatKit() {
@@ -39,7 +39,15 @@ export function SimpleChatKit() {
         visibility: 'visible',
         backgroundColor: 'lightblue'
       }}>
-        <chatkit.control />
+        <ChatKit
+          control={chatkit.control}
+          className="block h-full w-full"
+          style={{ 
+            pointerEvents: 'auto',
+            opacity: 1,
+            visibility: 'visible'
+          }}
+        />
       </div>
     </div>
   );
