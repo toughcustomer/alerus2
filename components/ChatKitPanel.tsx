@@ -357,21 +357,19 @@ export function ChatKitPanel({
 
   return (
     <div className="relative pb-8 flex h-[90vh] w-full rounded-2xl flex-col overflow-hidden bg-white shadow-sm transition-colors dark:bg-slate-900">
-      {/* Always render ChatKit - no conditional hiding */}
-      <div className="h-full w-full">
-        <ChatKit
-          key={widgetInstanceKey}
-          control={chatkit.control}
-          className="block h-full w-full"
-          style={{ 
-            pointerEvents: 'auto',
-            opacity: 1,
-            visibility: 'visible'
-          }}
-        />
-      </div>
+      {/* ChatKit component - ALWAYS visible and functional */}
+      <ChatKit
+        key={widgetInstanceKey}
+        control={chatkit.control}
+        className="block h-full w-full"
+        style={{ 
+          pointerEvents: 'auto',
+          opacity: 1,
+          visibility: 'visible'
+        }}
+      />
       
-      {/* Show loading overlay only when initializing and no errors */}
+      {/* Loading overlay - only when initializing and no errors */}
       {isInitializingSession && !blockingError && (
         <div className="absolute inset-0 z-10 flex h-full w-full flex-col justify-center rounded-[inherit] bg-white/85 p-6 text-center backdrop-blur dark:bg-slate-900/90">
           <div className="mx-auto w-full max-w-md rounded-xl bg-white px-6 py-4 text-lg font-medium text-slate-700 dark:bg-transparent dark:text-slate-100">
@@ -380,7 +378,7 @@ export function ChatKitPanel({
         </div>
       )}
       
-      {/* Show error overlay only when there's a blocking error */}
+      {/* Error overlay - only when there's a blocking error */}
       {blockingError && (
         <div className="absolute inset-0 z-20 flex h-full w-full flex-col justify-center rounded-[inherit] bg-white/85 p-6 text-center backdrop-blur dark:bg-slate-900/90">
           <div className="mx-auto w-full max-w-md rounded-xl bg-white px-6 py-4 text-lg font-medium text-slate-700 dark:bg-transparent dark:text-slate-100">
