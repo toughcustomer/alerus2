@@ -349,7 +349,7 @@ export function ChatKitPanel({
         key={widgetInstanceKey}
         control={chatkit.control}
         className={
-          blockingError || isInitializingSession
+          blockingError
             ? "pointer-events-none opacity-0"
             : "block h-full w-full"
         }
@@ -357,9 +357,11 @@ export function ChatKitPanel({
       <ErrorOverlay
         error={blockingError}
         fallbackMessage={
-          blockingError || !isInitializingSession
+          blockingError
             ? null
-            : "Loading assistant session..."
+            : isInitializingSession
+            ? "Loading assistant session..."
+            : null
         }
         onRetry={blockingError && errors.retryable ? handleResetChat : null}
         retryLabel="Restart chat"
