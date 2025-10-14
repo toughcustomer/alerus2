@@ -340,6 +340,8 @@ export function ChatKitPanel({
       scriptStatus,
       hasError: Boolean(blockingError),
       workflowId: WORKFLOW_ID,
+      blockingError,
+      errors,
     });
   }
 
@@ -348,24 +350,23 @@ export function ChatKitPanel({
       <ChatKit
         key={widgetInstanceKey}
         control={chatkit.control}
-        className={
-          blockingError
-            ? "pointer-events-none opacity-0"
-            : "block h-full w-full"
-        }
+        className="block h-full w-full"
       />
-      <ErrorOverlay
-        error={blockingError}
-        fallbackMessage={
-          blockingError
-            ? null
-            : isInitializingSession
-            ? "Loading assistant session..."
-            : null
-        }
-        onRetry={blockingError && errors.retryable ? handleResetChat : null}
-        retryLabel="Restart chat"
-      />
+      {blockingError && (
+        <ErrorOverlay
+          error={blockingError}
+          fallbackMessage={null}
+          onRetry={errors.retryable ? handleResetChat : null}
+          retryLabel="Restart chat"
+        />
+      )}
+      {isInitializingSession && !blockingError && (
+        <div className="absolute inset-0 z-10 flex h-full w-full flex-col justify-center rounded-[inherit] bg-white/85 p-6 text-center backdrop-blur dark:bg-slate-900/90">
+          <div className="mx-auto w-full max-w-md rounded-xl bg-white px-6 py-4 text-lg font-medium text-slate-700 dark:bg-transparent dark:text-slate-100">
+            <div>Loading assistant session...</div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
