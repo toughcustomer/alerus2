@@ -345,25 +345,55 @@ export function ChatKitPanel({
     });
   }
 
+  // Debug: Log the current state
+  console.log("ChatKitPanel render:", {
+    isInitializingSession,
+    blockingError,
+    hasControl: Boolean(chatkit.control),
+    scriptStatus,
+    errors,
+    widgetInstanceKey
+  });
+
   return (
     <div className="relative pb-8 flex h-[90vh] w-full rounded-2xl flex-col overflow-hidden bg-white shadow-sm transition-colors dark:bg-slate-900">
-      <ChatKit
-        key={widgetInstanceKey}
-        control={chatkit.control}
-        className="block h-full w-full"
-      />
-      {blockingError && (
-        <ErrorOverlay
-          error={blockingError}
-          fallbackMessage={null}
-          onRetry={errors.retryable ? handleResetChat : null}
-          retryLabel="Restart chat"
+      {/* Always render ChatKit - no conditional hiding */}
+      <div className="h-full w-full">
+        <ChatKit
+          key={widgetInstanceKey}
+          control={chatkit.control}
+          className="block h-full w-full"
+          style={{ 
+            pointerEvents: 'auto',
+            opacity: 1,
+            visibility: 'visible'
+          }}
         />
-      )}
+      </div>
+      
+      {/* Show loading overlay only when initializing and no errors */}
       {isInitializingSession && !blockingError && (
         <div className="absolute inset-0 z-10 flex h-full w-full flex-col justify-center rounded-[inherit] bg-white/85 p-6 text-center backdrop-blur dark:bg-slate-900/90">
           <div className="mx-auto w-full max-w-md rounded-xl bg-white px-6 py-4 text-lg font-medium text-slate-700 dark:bg-transparent dark:text-slate-100">
             <div>Loading assistant session...</div>
+          </div>
+        </div>
+      )}
+      
+      {/* Show error overlay only when there's a blocking error */}
+      {blockingError && (
+        <div className="absolute inset-0 z-20 flex h-full w-full flex-col justify-center rounded-[inherit] bg-white/85 p-6 text-center backdrop-blur dark:bg-slate-900/90">
+          <div className="mx-auto w-full max-w-md rounded-xl bg-white px-6 py-4 text-lg font-medium text-slate-700 dark:bg-transparent dark:text-slate-100">
+            <div>Error: {blockingError}</div>
+            {errors.retryable && (
+              <button
+                type="button"
+                className="mt-4 inline-flex items-center justify-center rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-none transition hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-2 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200"
+                onClick={handleResetChat}
+              >
+                Restart chat
+              </button>
+            )}
           </div>
         </div>
       )}
