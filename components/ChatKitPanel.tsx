@@ -10,7 +10,7 @@ import {
   WORKFLOW_ID,
   getThemeConfig,
 } from "@/lib/config";
-import { ErrorOverlay } from "./ErrorOverlay";
+// import { ErrorOverlay } from "./ErrorOverlay";
 import type { ColorScheme } from "@/hooks/useColorScheme";
 
 export type FactAction = {
@@ -352,22 +352,50 @@ export function ChatKitPanel({
     hasControl: Boolean(chatkit.control),
     scriptStatus,
     errors,
-    widgetInstanceKey
+    widgetInstanceKey,
+    timestamp: new Date().toISOString()
   });
+
+  // Additional debugging for control state changes
+  useEffect(() => {
+    console.log("ChatKit control state changed:", {
+      hasControl: Boolean(chatkit.control),
+      timestamp: new Date().toISOString()
+    });
+  }, [chatkit.control]);
 
   return (
     <div className="relative pb-8 flex h-[90vh] w-full rounded-2xl flex-col overflow-hidden bg-white shadow-sm transition-colors dark:bg-slate-900">
-      {/* ChatKit component - ALWAYS visible and functional */}
-      <ChatKit
-        key={widgetInstanceKey}
-        control={chatkit.control}
-        className="block h-full w-full"
+      {/* ChatKit component - FORCE visible with !important styles */}
+      <div 
+        className="h-full w-full"
         style={{ 
-          pointerEvents: 'auto',
-          opacity: 1,
-          visibility: 'visible'
+          position: 'relative',
+          zIndex: 1
         }}
-      />
+      >
+        <ChatKit
+          key={widgetInstanceKey}
+          control={chatkit.control}
+          className="block h-full w-full"
+          style={{ 
+            pointerEvents: 'auto',
+            opacity: 1,
+            visibility: 'visible',
+            display: 'block',
+            position: 'relative',
+            zIndex: 1
+          }}
+        />
+      </div>
+      
+      {/* Debug info overlay */}
+      <div className="absolute top-2 left-2 z-30 bg-black/80 text-white text-xs p-2 rounded">
+        <div>Control: {String(Boolean(chatkit.control))}</div>
+        <div>Init: {String(isInitializingSession)}</div>
+        <div>Error: {String(Boolean(blockingError))}</div>
+        <div>Script: {scriptStatus}</div>
+      </div>
       
       {/* Loading overlay - only when initializing and no errors */}
       {isInitializingSession && !blockingError && (
