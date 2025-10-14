@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useMemo } from "react";
 import { ChatKit, useChatKit } from "@openai/chatkit-react";
 import {
   STARTER_PROMPTS,
@@ -261,26 +261,35 @@ export function ChatKitPanel({
     [isWorkflowConfigured, setErrorState]
   );
 
+  // Memoize theme config to prevent infinite re-renders
+  const themeConfig = useMemo(() => ({
+    colorScheme: theme,
+    ...getThemeConfig(theme),
+  }), [theme]);
+
+  // Memoize configuration objects to prevent infinite re-renders
+  const startScreenConfig = useMemo(() => ({
+    greeting: GREETING,
+    prompts: STARTER_PROMPTS,
+  }), []);
+
+  const composerConfig = useMemo(() => ({
+    placeholder: PLACEHOLDER_INPUT,
+    attachments: {
+      enabled: true,
+    },
+  }), []);
+
+  const threadItemActionsConfig = useMemo(() => ({
+    feedback: false,
+  }), []);
+
   const chatkit = useChatKit({
     api: { getClientSecret },
-    theme: {
-      colorScheme: theme,
-      ...getThemeConfig(theme),
-    },
-    startScreen: {
-      greeting: GREETING,
-      prompts: STARTER_PROMPTS,
-    },
-    composer: {
-      placeholder: PLACEHOLDER_INPUT,
-      attachments: {
-        // Enable attachments
-        enabled: true,
-      },
-    },
-    threadItemActions: {
-      feedback: false,
-    },
+    theme: themeConfig,
+    startScreen: startScreenConfig,
+    composer: composerConfig,
+    threadItemActions: threadItemActionsConfig,
     onClientTool: async (invocation: {
       name: string;
       params: Record<string, unknown>;
@@ -356,13 +365,8 @@ export function ChatKitPanel({
     timestamp: new Date().toISOString()
   });
 
-  // Additional debugging for control state changes
-  useEffect(() => {
-    console.log("ChatKit control state changed:", {
-      hasControl: Boolean(chatkit.control),
-      timestamp: new Date().toISOString()
-    });
-  }, [chatkit.control]);
+  // Removed useEffect that was causing infinite re-renders
+  // The chatkit.control object reference changes on every render
 
   return (
     <div className="relative pb-8 flex h-[90vh] w-full rounded-2xl flex-col overflow-hidden bg-white shadow-sm transition-colors dark:bg-slate-900">
