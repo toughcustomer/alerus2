@@ -107,18 +107,28 @@ export function ChatKitPanel({
   console.log("Simple ChatKitPanel render:", {
     hasControl: Boolean(chatkit.control),
     theme,
-    workflowId: WORKFLOW_ID
+    workflowId: WORKFLOW_ID,
+    controlType: typeof chatkit.control,
+    controlValue: chatkit.control
   });
 
   return (
     <div className="relative pb-8 flex h-[90vh] w-full rounded-2xl flex-col overflow-hidden bg-white shadow-sm transition-colors dark:bg-slate-900">
+      {/* Debug info */}
+      <div className="absolute top-2 left-2 z-30 bg-black/80 text-white text-xs p-2 rounded">
+        <div>Control: {String(Boolean(chatkit.control))}</div>
+        <div>Theme: {theme}</div>
+        <div>Type: {typeof chatkit.control}</div>
+      </div>
+      
       <ChatKit
         control={chatkit.control}
         className="block h-full w-full"
         style={{ 
           pointerEvents: 'auto',
           opacity: 1,
-          visibility: 'visible'
+          visibility: 'visible',
+          backgroundColor: 'lightblue' // Visual indicator
         }}
       />
     </div>
